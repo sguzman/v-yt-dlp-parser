@@ -30,8 +30,8 @@ pub struct Payload {
 	webpage_url_domain     string
 	release_year           ?int
 	epoch                  int
-	files_to_move          Files_to_Move @[skip]
-	version                Version       @[json: '_version']
+	files_to_move          Files_to_Move @[sql: '-']
+	version                Version       @[json: '_version'; sql: '-']
 }
 
 // Table for tags
@@ -47,7 +47,7 @@ pub struct Entry {
 	id                     string
 	title                  string
 	formats                []Format              @[fkey: 'this']
-	thumbnails             []Thumbnail2          @[skip]
+	thumbnails             []Thumbnail2          @[sql: '-']
 	thumbnail              string
 	description            string
 	channel_id             string
@@ -62,9 +62,9 @@ pub struct Entry {
 	playable_in_embed      bool
 	live_status            string
 	release_timestamp      ?int
-	format_sort_fields     []string              @[json: '_format_sort_fields'; skip]
-	automatic_captions     map[string][]Subtitle @[skip]
-	subtitles              map[string][]Subtitle @[skip]
+	format_sort_fields     []string              @[json: '_format_sort_fields'; sql: '-']
+	automatic_captions     map[string][]Subtitle @[sql: '-']
+	subtitles              map[string][]Subtitle @[sql: '-']
 	comment_count          int
 	chapters               []Chapter             @[fkey: 'this']
 	heatmap                []Heatmap             @[fkey: 'this']
@@ -101,7 +101,7 @@ pub struct Entry {
 	requested_subtitles    ?string
 	has_drm                ?string               @[json: '_has_drm']
 	epoch                  int
-	requested_dowloads     []RequestedDownload   @[skip]
+	requested_dowloads     []RequestedDownload   @[sql: '-']
 	requested_formats      []RequestedFormat     @[fkey: 'this']
 	format                 string
 	format_id              string
@@ -145,7 +145,7 @@ pub struct Format {
 	resolution      string
 	aspect_ratio    f32
 	filesize_approx ?int
-	http_headers    map[string]string @[skip]
+	http_headers    map[string]string @[sql: '-']
 	audio_ext       string
 	video_ext       string
 	vbr             f64
@@ -192,11 +192,11 @@ pub struct RequestedFormat {
 	acodec              string
 	dynamic_range       string
 	container           string
-	downloader_options  DownloaderOptions @[skip]
+	downloader_options  DownloaderOptions @[sql: '-']
 	protocol            string
 	resolution          string
 	aspect_ratio        f32
-	http_headers        map[string]string @[skip]
+	http_headers        map[string]string @[sql: '-']
 	video_ext           string
 	audio_ext           string
 	abr                 f64
