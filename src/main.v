@@ -55,9 +55,9 @@ struct Entry {
 	playable_in_embed      bool
 	live_status            string
 	release_timestamp      ?int
-	format_sort_fields     []string            @[json: '_format_sort_fields']
-	automatic_captions     AutomaticCaption
-	subtitles              Subtitle
+	format_sort_fields     []string              @[json: '_format_sort_fields']
+	automatic_captions     map[string][]Subtitle
+	subtitles              map[string][]Subtitle
 	comment_count          int
 	chapters               []Chapter
 	heatmap                []Heatmap
@@ -83,7 +83,7 @@ struct Entry {
 	playlist_uploader_id   string
 	n_entries              int
 	playlist_index         int
-	last_playlist_index    int                 @[json: '__last_playlist_index']
+	last_playlist_index    int                   @[json: '__last_playlist_index']
 	playlist_autonumber    int
 	display_id             string
 	fulltitle              string
@@ -92,7 +92,7 @@ struct Entry {
 	is_live                bool
 	was_live               bool
 	requested_subtitles    ?string
-	has_drm                ?string             @[json: '_has_drm']
+	has_drm                ?string               @[json: '_has_drm']
 	epoch                  int
 	requested_dowloads     []RequestedDownload
 	requested_formats      []RequestedFormat
@@ -174,9 +174,11 @@ struct Chapter {
 	end_time   f32
 }
 
-struct Subtitle {}
-
-struct AutomaticCaption {}
+struct Subtitle {
+	ext  string
+	url  string
+	name string
+}
 
 struct Thumbnail2 {
 	url        string
