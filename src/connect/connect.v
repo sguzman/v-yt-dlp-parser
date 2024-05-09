@@ -1,14 +1,21 @@
 module connect
 
-import db.sqlite
+import db.pg
 import store
 
 __global (
-	con sqlite.DB
+	con pg.DB
 )
 
 fn init() {
-	con = sqlite.connect('data.db') or { panic('Could not connect to database') }
+	db := pg.connect(pg.Config{
+		host: 'localhost'
+		port: 5432
+		user: 'admin'
+		password: 'admin'
+		dbname: 'youtube'
+	}) or { panic('Could not connect to database') }
+	con = db
 
 	// Create the table
 	sql con {
@@ -27,7 +34,7 @@ fn init() {
 }
 
 fn cleanup() {
-	con.close() or { panic('Could not close connection') }
+	con.close()
 	print('Connection closed\n')
 }
 
