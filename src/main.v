@@ -5,6 +5,7 @@ import os
 import db.sqlite
 import youtube
 import store
+import connect
 
 fn main() {
 	// Embed the json file in the binary
@@ -12,5 +13,7 @@ fn main() {
 
 	// Parse the json file
 	person := json.decode(store.Payload, json_file)!
-	println(person)
+
+	// Insert the data into the database
+	connect.insert(person)
 }
