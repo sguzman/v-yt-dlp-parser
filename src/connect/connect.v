@@ -8,13 +8,22 @@ __global (
 )
 
 fn init() {
-	print('Connecting to database\n')
 	con = sqlite.connect('data.db') or { panic('Could not connect to database') }
 
 	// Create the table
 	sql con {
 		create table store.Payload
-	} or { panic('Could not create table') }
+		create table store.Tag
+		create table store.Entry
+		create table store.Format
+		create table store.Fragment
+		create table store.Category
+		create table store.RequestedFormat
+		create table store.Heatmap
+		create table store.Chapter
+		create table store.Subtitle
+		create table store.Thumbnail
+	} or { panic('Could not create tables') }
 }
 
 fn cleanup() {
