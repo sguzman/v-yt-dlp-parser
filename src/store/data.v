@@ -3,6 +3,7 @@ module store
 // Struct for json
 @[table: 'raw_payload']
 pub struct Payload {
+	this                   int           @[json: '-'; primary; sql: serial]
 	id                     string        @[primary]
 	channel                string
 	channel_id             string
@@ -61,7 +62,7 @@ pub struct Entry {
 	playable_in_embed      bool
 	live_status            string
 	release_timestamp      ?int
-	format_sort_fields     []string              @[json: '_format_sort_fields'; sql: skip]
+	format_sort_fields     []string              @[json: '_format_sort_fields'; skip]
 	automatic_captions     map[string][]Subtitle @[skip]
 	subtitles              map[string][]Subtitle @[skip]
 	comment_count          int
@@ -100,7 +101,7 @@ pub struct Entry {
 	requested_subtitles    ?string
 	has_drm                ?string               @[json: '_has_drm']
 	epoch                  int
-	requested_dowloads     []RequestedDownload   @[fkey: 'this']
+	requested_dowloads     []RequestedDownload   @[skip]
 	requested_formats      []RequestedFormat     @[fkey: 'this']
 	format                 string
 	format_id              string
@@ -123,6 +124,47 @@ pub struct Entry {
 	abr                    f64
 	asr                    int
 	audio_channels         int
+}
+
+@[table: 'formats']
+pub struct Format {
+	this            int               @[json: '-'; primary; sql: serial]
+	format_id       string
+	format_note     string
+	ext             string
+	protocol        string
+	acodec          string
+	vcodec          string
+	url             string
+	width           int
+	height          int
+	fps             f64
+	rows            int
+	columns         int
+	fragments       []Fragment        @[fkey: 'this']
+	resolution      string
+	aspect_ratio    f32
+	filesize_approx ?int
+	http_headers    map[string]string @[skip]
+	audio_ext       string
+	video_ext       string
+	vbr             f64
+	abr             f64
+	tbr             ?f64
+	format          string
+}
+
+@[table: 'fragments']
+pub struct Fragment {
+	this     int    @[json: '-'; primary; sql: serial]
+	url      string
+	duration f64
+}
+
+@[table: 'categories']
+pub struct Category {
+	this int    @[json: '-'; primary; sql: serial]
+	name string
 }
 
 @[table: 'requested_formats']
@@ -199,8 +241,6 @@ pub struct Thumbnail2 {
 	preference int
 	id         string
 }
-
-pub struct Format {}
 
 pub struct Version {
 	version          string
