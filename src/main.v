@@ -1,8 +1,6 @@
 module main
 
 import json
-import os
-import db.sqlite
 import youtube
 import store
 import connect
@@ -14,4 +12,6 @@ fn main() {
 	// Parse the json file
 	person := json.decode(store.Payload, json_file)!
 	connect.insert(person)
+
+	print('done\n')
 }
