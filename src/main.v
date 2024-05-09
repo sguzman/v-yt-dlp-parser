@@ -13,7 +13,5 @@ fn main() {
 
 	// Parse the json file
 	person := json.decode(store.Payload, json_file)!
-
-	// Insert the data into the database
 	connect.insert(person)
 }
