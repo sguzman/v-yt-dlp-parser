@@ -1,16 +1,17 @@
 module store
 
 // Struct for json
+@[table: 'raw_payload']
 pub struct Payload {
-	id                     string
+	id                     string        @[primary]
 	channel                string
 	channel_id             string
 	title                  string
 	available              ?string
 	channel_follower_count ?int
 	description            ?string
-	tags                   []string
-	thumbnails             []Thumbnail
+	tags                   []Tag         @[fkey: 'this']
+	thumbnails             []Thumbnail   @[fkey: 'this']
 	uploader_id            string
 	uploader_url           string
 	modified               ?string
@@ -19,7 +20,7 @@ pub struct Payload {
 	uploader               string
 	channel_url            string
 	type_                  string        @[json: '_type']
-	entries                []Entry
+	entries                []Entry       @[fkey: 'this']
 	extractor_key          string
 	extractor              string
 	webpage_url            string
@@ -28,15 +29,24 @@ pub struct Payload {
 	webpage_url_domain     string
 	release_year           ?int
 	epoch                  int
-	files_to_move          Files_to_Move
+	files_to_move          Files_to_Move @[skip]
 	version                Version       @[json: '_version']
 }
 
-struct Entry {
+// Table for tags
+@[table: 'tags']
+pub struct Tag {
+	this string @[json: '-'; primary; sql: serial]
+	name string
+}
+
+@[table: 'entries']
+pub struct Entry {
+	this                   int                   @[json: '-'; primary; sql: serial]
 	id                     string
 	title                  string
-	formats                []Format
-	thumbnails             []Thumbnail2
+	formats                []Format              @[fkey: 'this']
+	thumbnails             []Thumbnail2          @[skip]
 	thumbnail              string
 	description            string
 	channel_id             string
@@ -46,17 +56,17 @@ struct Entry {
 	average_rating         ?f64
 	age_limit              int
 	webpage_url            string
-	categories             []string
-	tags                   []string
+	categories             []Category            @[fkey: 'this']
+	tags                   []Tag                 @[fkey: 'this']
 	playable_in_embed      bool
 	live_status            string
 	release_timestamp      ?int
-	format_sort_fields     []string              @[json: '_format_sort_fields']
-	automatic_captions     map[string][]Subtitle
-	subtitles              map[string][]Subtitle
+	format_sort_fields     []string              @[json: '_format_sort_fields'; sql: skip]
+	automatic_captions     map[string][]Subtitle @[skip]
+	subtitles              map[string][]Subtitle @[skip]
 	comment_count          int
-	chapters               []Chapter
-	heatmap                []Heatmap
+	chapters               []Chapter             @[fkey: 'this']
+	heatmap                []Heatmap             @[fkey: 'this']
 	like_count             int
 	channel                string
 	channel_follower_count ?int
@@ -90,8 +100,8 @@ struct Entry {
 	requested_subtitles    ?string
 	has_drm                ?string               @[json: '_has_drm']
 	epoch                  int
-	requested_dowloads     []RequestedDownload
-	requested_formats      []RequestedFormat
+	requested_dowloads     []RequestedDownload   @[fkey: 'this']
+	requested_formats      []RequestedFormat     @[fkey: 'this']
 	format                 string
 	format_id              string
 	ext                    string
@@ -115,7 +125,9 @@ struct Entry {
 	audio_channels         int
 }
 
-struct RequestedFormat {
+@[table: 'requested_formats']
+pub struct RequestedFormat {
+	this                int               @[json: '-'; primary; sql: serial]
 	asr                 ?int
 	filesize            int
 	format_id           string
@@ -138,11 +150,11 @@ struct RequestedFormat {
 	acodec              string
 	dynamic_range       string
 	container           string
-	downloader_options  DownloaderOptions
+	downloader_options  DownloaderOptions @[skip]
 	protocol            string
 	resolution          string
 	aspect_ratio        f32
-	http_headers        map[string]string
+	http_headers        map[string]string @[skip]
 	video_ext           string
 	audio_ext           string
 	abr                 f64
@@ -150,50 +162,58 @@ struct RequestedFormat {
 	format              string
 }
 
-struct DownloaderOptions {
+pub struct DownloaderOptions {
 	http_chunk_size int
 }
 
-struct RequestedDownload {
+pub struct RequestedDownload {
 	requested_formats RequestedFormat
 }
 
-struct Heatmap {
+@[table: 'heatmaps']
+pub struct Heatmap {
+	this       int @[json: '-'; primary; sql: serial]
 	start_time f32
 	end_time   f32
 	value      f64
 }
 
-struct Chapter {
+@[table: 'chapters']
+pub struct Chapter {
+	this       int    @[json: '-'; primary; sql: serial]
 	start_time f32
 	title      string
 	end_time   f32
 }
 
-struct Subtitle {
+@[table: 'subtitles']
+pub struct Subtitle {
+	this int    @[json: '-'; primary; sql: serial]
 	ext  string
 	url  string
 	name string
 }
 
-struct Thumbnail2 {
+pub struct Thumbnail2 {
 	url        string
 	preference int
 	id         string
 }
 
-struct Format {}
+pub struct Format {}
 
-struct Version {
+pub struct Version {
 	version          string
 	current_git_head ?string
 	release_git_head string
 	repository       string
 }
 
-struct Files_to_Move {}
+pub struct Files_to_Move {}
 
-struct Thumbnail {
+@[table: 'thumbnails']
+pub struct Thumbnail {
+	this        int     @[json: '-'; primary; sql: serial]
 	url         string
 	height      ?int
 	width       ?int
