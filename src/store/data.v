@@ -1,10 +1,9 @@
 module store
 
 // Struct for json
-@[table: 'raw_payload']
 pub struct Payload {
-	this                   int           @[json: '-'; primary; sql: serial]
-	id                     string        @[primary]
+	this                   int           @[json: '-'; primary; sql_type: 'serial']
+	id                     string
 	channel                string
 	channel_id             string
 	title                  string
@@ -31,17 +30,15 @@ pub struct Payload {
 	release_year           ?int
 	epoch                  int
 	files_to_move          Files_to_Move @[sql: '-']
-	version                Version       @[json: '_version'; sql: '-']
+	version                ?Version      @[json: '_version'; sql: '-']
 }
 
 // Table for tags
-@[table: 'tags']
 pub struct Tag {
-	this string @[json: '-'; primary; sql: serial]
+	this int    @[json: '-'; sql: serial]
 	name string
 }
 
-@[table: 'entries']
 pub struct Entry {
 	this                   int                   @[json: '-'; primary; sql: serial]
 	id                     string
@@ -63,8 +60,8 @@ pub struct Entry {
 	live_status            string
 	release_timestamp      ?int
 	format_sort_fields     []string              @[json: '_format_sort_fields'; sql: '-']
-	automatic_captions     map[string][]Subtitle @[sql: '-']
-	subtitles              map[string][]Subtitle @[sql: '-']
+	automatic_captions     map[string][]Subtitle
+	subtitles              map[string][]Subtitle
 	comment_count          int
 	chapters               []Chapter             @[fkey: 'this']
 	heatmap                []Heatmap             @[fkey: 'this']
@@ -126,9 +123,8 @@ pub struct Entry {
 	audio_channels         int
 }
 
-@[table: 'formats']
 pub struct Format {
-	this            int               @[json: '-'; primary; sql: serial]
+	this            int               @[json: '-'; sql: serial]
 	format_id       string
 	format_note     string
 	ext             string
@@ -141,7 +137,7 @@ pub struct Format {
 	fps             f64
 	rows            int
 	columns         int
-	fragments       []Fragment        @[fkey: 'this']
+	fragments       []Fragment        @[sql: '-']
 	resolution      string
 	aspect_ratio    f32
 	filesize_approx ?int
@@ -154,22 +150,18 @@ pub struct Format {
 	format          string
 }
 
-@[table: 'fragments']
 pub struct Fragment {
-	this     int    @[json: '-'; primary; sql: serial]
 	url      string
 	duration f64
 }
 
-@[table: 'categories']
 pub struct Category {
-	this int    @[json: '-'; primary; sql: serial]
+	this int    @[json: '-'; sql: serial]
 	name string
 }
 
-@[table: 'requested_formats']
 pub struct RequestedFormat {
-	this                int               @[json: '-'; primary; sql: serial]
+	this                int               @[json: '-']
 	asr                 ?int
 	filesize            int
 	format_id           string
@@ -212,31 +204,29 @@ pub struct RequestedDownload {
 	requested_formats RequestedFormat
 }
 
-@[table: 'heatmaps']
 pub struct Heatmap {
-	this       int @[json: '-'; primary; sql: serial]
+	this       int @[json: '-'; sql: serial]
 	start_time f32
 	end_time   f32
 	value      f64
 }
 
-@[table: 'chapters']
 pub struct Chapter {
-	this       int    @[json: '-'; primary; sql: serial]
+	this       int    @[json: '-'; sql: serial]
 	start_time f32
 	title      string
 	end_time   f32
 }
 
-@[table: 'subtitles']
 pub struct Subtitle {
-	this int    @[json: '-'; primary; sql: serial]
+	this int    @[json: '-'; sql: serial]
 	ext  string
 	url  string
 	name string
 }
 
 pub struct Thumbnail2 {
+	this       int    @[json: '-'; sql: serial]
 	url        string
 	preference int
 	id         string
@@ -251,9 +241,8 @@ pub struct Version {
 
 pub struct Files_to_Move {}
 
-@[table: 'thumbnails']
 pub struct Thumbnail {
-	this        int     @[json: '-'; primary; sql: serial]
+	this        int     @[json: '-'; sql: serial]
 	url         string
 	height      ?int
 	width       ?int
