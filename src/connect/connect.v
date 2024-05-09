@@ -30,6 +30,7 @@ fn init() {
 		create table store.Chapter
 		create table store.Subtitle
 		create table store.Thumbnail
+		create table store.Version
 	} or { panic('Could not create tables') }
 }
 
