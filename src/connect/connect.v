@@ -1,92 +1,44 @@
 module connect
 
 import db.pg
-import store {
-	Category,
+import data {
+	ChannelThumbnail,
 	Chapter,
 	Entry,
 	Format,
 	Heatmap,
-	PayloadSql,
+	Payload,
 	RequestedFormat,
 	Subtitle,
-	Tag,
-	Thumbnail,
-	Thumbnail2,
 	Version,
+	VideoThumbnail,
 }
 
 __global (
 	con pg.DB
 )
 
-fn drop_ignore_payload_sql() {
+fn drop_ignore_payload() {
 	sql con {
-		drop table PayloadSql
+		drop table Payload
 	} or {
-		println('Could not drop table PayloadSql')
+		println('Could not drop table Payload')
 		return
 	}
 
-	println('Success: drop table PayloadSql')
+	println('Success: drop table Payload')
 }
 
-fn create_ignore_payload_sql() {
-	drop_ignore_payload_sql()
+fn create_ignore_payload() {
+	drop_ignore_payload()
 	sql con {
-		create table PayloadSql
+		create table Payload
 	} or {
-		println('Could not create table PayloadSql')
+		println('Could not create table Payload')
 		return
 	}
 
-	println('Success: create table PayloadSql')
-}
-
-fn drop_ignore_tag() {
-	sql con {
-		drop table Tag
-	} or {
-		println('Could not drop table Tag')
-		return
-	}
-
-	println('Success: drop table Tag')
-}
-
-fn create_ignore_tag() {
-	drop_ignore_tag()
-	sql con {
-		create table Tag
-	} or {
-		println('Could not create table Tag')
-		return
-	}
-
-	println('Success: create table Tag')
-}
-
-fn drop_ignore_thumbnail() {
-	sql con {
-		drop table Thumbnail
-	} or {
-		println('Could not drop table Thumbnail')
-		return
-	}
-
-	println('Success: drop table Thumbnail')
-}
-
-fn create_ignore_thumbnail() {
-	drop_ignore_thumbnail()
-	sql con {
-		create table Thumbnail
-	} or {
-		println('Could not create table Thumbnail')
-		return
-	}
-
-	println('Success: create table Thumbnail')
+	println('Success: create table Payload')
 }
 
 fn drop_ignore_entry() {
@@ -135,50 +87,50 @@ fn create_ignore_format() {
 	println('Success: create table Format')
 }
 
-fn drop_ignore_thumbnail2() {
+fn drop_ignore_channel_thumbnail() {
 	sql con {
-		drop table Thumbnail2
+		drop table ChannelThumbnail
 	} or {
-		println('Could not drop table Thumbnail2')
+		println('Could not drop table ChannelThumbnail')
 		return
 	}
 
-	println('Success: drop table Thumbnail2')
+	println('Success: drop table ChannelThumbnail')
 }
 
-fn create_ignore_thumbnail2() {
-	drop_ignore_thumbnail2()
+fn create_ignore_channel_thumbnail() {
+	drop_ignore_channel_thumbnail()
 	sql con {
-		create table Thumbnail2
+		create table ChannelThumbnail
 	} or {
-		println('Could not create table Thumbnail2')
+		println('Could not create table ChannelThumbnail')
 		return
 	}
 
-	println('Success: create table Thumbnail2')
+	println('Success: create table ChannelThumbnail')
 }
 
-fn drop_ignore_category() {
+fn drop_ignore_video_thumbnail() {
 	sql con {
-		drop table Category
+		drop table VideoThumbnail
 	} or {
-		println('Could not drop table Category')
+		println('Could not drop table VideoThumbnail')
 		return
 	}
 
-	println('Success: drop table Category')
+	println('Success: drop table VideoThumbnail')
 }
 
-fn create_ignore_category() {
-	drop_ignore_category()
+fn create_ignore_video_thumbnail() {
+	drop_ignore_video_thumbnail()
 	sql con {
-		create table Category
+		create table VideoThumbnail
 	} or {
-		println('Could not create table Category')
+		println('Could not create table VideoThumbnail')
 		return
 	}
 
-	println('Success: create table Category')
+	println('Success: create table VideoThumbnail')
 }
 
 fn drop_ignore_heatmap() {
@@ -306,13 +258,13 @@ fn init() {
 	}) or { panic('Could not connect to database') }
 	con = db
 
-	create_ignore_payload_sql()
-	create_ignore_tag()
-	create_ignore_thumbnail()
+	create_ignore_payload()
+
+	create_ignore_video_thumbnail()
+	create_ignore_channel_thumbnail()
 	create_ignore_entry()
 	create_ignore_format()
-	create_ignore_thumbnail2()
-	create_ignore_category()
+
 	create_ignore_heatmap()
 	create_ignore_chapter()
 	create_ignore_subtitle()
@@ -327,8 +279,8 @@ fn cleanup() {
 	print('Connection closed\n')
 }
 
-pub fn insert(payload PayloadSql) {
+pub fn insert(payload Payload) {
 	sql con {
-		insert payload into PayloadSql
+		insert payload into Payload
 	} or { panic('Could not insert payload') }
 }

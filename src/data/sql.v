@@ -1,8 +1,8 @@
 module data
 
-pub struct PayloadSql {
+pub struct Payload {
 pub:
-	this                   int           @[primary; sql_type: 'serial']
+	this                   int                @[primary; sql_type: 'serial']
 	id                     string
 	channel                string
 	channel_id             string
@@ -10,8 +10,8 @@ pub:
 	available              ?string
 	channel_follower_count ?int
 	description            ?string
-	tags                   []Tag         @[sql: '-']
-	thumbnails             []Thumbnail   @[fkey: 'this']
+	tags                   []string           @[sql: '-']
+	thumbnails             []ChannelThumbnail @[fkey: 'this']
 	uploader_id            string
 	uploader_url           string
 	modified               ?string
@@ -19,8 +19,8 @@ pub:
 	playlist_count         int
 	uploader               string
 	channel_url            string
-	type_                  string        @[json: '_type']
-	entries                []Entry       @[fkey: 'this']
+	type_                  string             @[json: '_type']
+	entries                []Entry            @[fkey: 'this']
 	extractor_key          string
 	extractor              string
 	webpage_url            string
@@ -29,14 +29,8 @@ pub:
 	webpage_url_domain     string
 	release_year           ?int
 	epoch                  int
-	files_to_move          Files_to_Move @[sql: '-']
-	version                Version
-}
-
-// Table for tags
-pub struct Tag {
-	this int    @[json: '-'; sql: serial]
-	name string
+	files_to_move          Files_to_Move      @[json: '__files_to_move'; sql: '-']
+	version                Version            @[json: '_version']
 }
 
 pub struct Entry {
@@ -44,7 +38,7 @@ pub struct Entry {
 	id                     string
 	title                  string
 	formats                []Format              @[fkey: 'this']
-	thumbnails             []Thumbnail2          @[sql: '-']
+	thumbnails             []VideoThumbnail      @[fkey: 'this']
 	thumbnail              string
 	description            string
 	channel_id             string
@@ -54,8 +48,8 @@ pub struct Entry {
 	average_rating         ?f64
 	age_limit              int
 	webpage_url            string
-	categories             []Category            @[fkey: 'this']
-	tags                   []Tag                 @[fkey: 'this']
+	categories             []string              @[sql: '-']
+	tags                   []string              @[sql: '-']
 	playable_in_embed      bool
 	live_status            string
 	release_timestamp      ?int
@@ -155,11 +149,6 @@ pub struct Fragment {
 	duration f64
 }
 
-pub struct Category {
-	this int    @[json: '-'; sql: serial]
-	name string
-}
-
 pub struct RequestedFormat {
 	this                int               @[json: '-']
 	asr                 ?int
@@ -225,7 +214,7 @@ pub struct Subtitle {
 	name string
 }
 
-pub struct Thumbnail2 {
+pub struct VideoThumbnail {
 	this       int    @[json: '-'; sql: serial]
 	url        string
 	preference int
@@ -241,7 +230,7 @@ pub struct Version {
 
 pub struct Files_to_Move {}
 
-pub struct Thumbnail {
+pub struct ChannelThumbnail {
 	this        int     @[json: '-'; sql: serial]
 	url         string
 	height      ?int
