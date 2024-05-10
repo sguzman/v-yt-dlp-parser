@@ -1,8 +1,8 @@
-module store
+module data
 
-// Struct for json
-pub struct Payload {
-	this                   int           @[json: '-'; primary; sql_type: 'serial']
+pub struct PayloadSql {
+pub:
+	this                   int           @[primary; sql_type: 'serial']
 	id                     string
 	channel                string
 	channel_id             string
@@ -10,7 +10,7 @@ pub struct Payload {
 	available              ?string
 	channel_follower_count ?int
 	description            ?string
-	tags                   []Tag         @[fkey: 'this']
+	tags                   []Tag         @[sql: '-']
 	thumbnails             []Thumbnail   @[fkey: 'this']
 	uploader_id            string
 	uploader_url           string
@@ -30,7 +30,7 @@ pub struct Payload {
 	release_year           ?int
 	epoch                  int
 	files_to_move          Files_to_Move @[sql: '-']
-	version                Version       @[json: '_version']
+	version                Version
 }
 
 // Table for tags

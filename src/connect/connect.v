@@ -7,7 +7,7 @@ import store {
 	Entry,
 	Format,
 	Heatmap,
-	Payload,
+	PayloadSql,
 	RequestedFormat,
 	Subtitle,
 	Tag,
@@ -20,27 +20,27 @@ __global (
 	con pg.DB
 )
 
-fn drop_ignore_payload() {
+fn drop_ignore_payload_sql() {
 	sql con {
-		drop table Payload
+		drop table PayloadSql
 	} or {
-		println('Could not drop table Payload')
+		println('Could not drop table PayloadSql')
 		return
 	}
 
-	println('Success: drop table Payload')
+	println('Success: drop table PayloadSql')
 }
 
-fn create_ignore_payload() {
-	drop_ignore_payload()
+fn create_ignore_payload_sql() {
+	drop_ignore_payload_sql()
 	sql con {
-		create table Payload
+		create table PayloadSql
 	} or {
-		println('Could not create table Payload')
+		println('Could not create table PayloadSql')
 		return
 	}
 
-	println('Success: create table Payload')
+	println('Success: create table PayloadSql')
 }
 
 fn drop_ignore_tag() {
@@ -306,7 +306,7 @@ fn init() {
 	}) or { panic('Could not connect to database') }
 	con = db
 
-	create_ignore_payload()
+	create_ignore_payload_sql()
 	create_ignore_tag()
 	create_ignore_thumbnail()
 	create_ignore_entry()
@@ -327,8 +327,8 @@ fn cleanup() {
 	print('Connection closed\n')
 }
 
-pub fn insert(payload Payload) {
+pub fn insert(payload PayloadSql) {
 	sql con {
-		insert payload into Payload
+		insert payload into PayloadSql
 	} or { panic('Could not insert payload') }
 }
