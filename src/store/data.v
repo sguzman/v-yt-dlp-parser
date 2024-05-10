@@ -30,7 +30,7 @@ pub struct Payload {
 	release_year           ?int
 	epoch                  int
 	files_to_move          Files_to_Move @[sql: '-']
-	version                ?Version      @[json: '_version'; sql: '-']
+	version                Version       @[json: '_version']
 }
 
 // Table for tags
